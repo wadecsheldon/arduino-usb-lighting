@@ -3,12 +3,20 @@
 
 #include "USBCommon.h"
 
+typedef struct {
+	uint8_t id;
+	uint16_t len;
+} LightingReport;
+
 class USBLighting_ : public PluggableUSBModule {
 	protected:
-		uint8_t epType[1];
+		EPTYPE_DESC_SIZE epType[1];
+		uint8_t idle;
+		uint8_t protocol;
 		uint8_t state = 0;
 		uint8_t report_id = 0;
-		uint8_t report_len = 0;
+		uint16_t report_len = 0;
+		bool updated = false;
 		
 		int getInterface(uint8_t* interfaceNum);
 		int getDescriptor(USBSetup& setup);
@@ -18,8 +26,7 @@ class USBLighting_ : public PluggableUSBModule {
 	public:
 		USBLighting_(void);
 		uint8_t getState(void);
-		uint8_t getReportID(void);
-		uint8_t getReportLength(void);
+		LightingReport getReport(void);
 };
 
 extern USBLighting_ USBLighting;
